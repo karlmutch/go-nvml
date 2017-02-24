@@ -226,7 +226,7 @@ func (gpu *Device) GetEncoderUtilization() (utilization uint, samplingPeriosUs u
 }
 
 // GetUtilizationRates retrieves the current utilization rates for the device's major subsystems.
-func (gpu *Device) GetUtilizationRates() (gpu uint, memory uint, error) {
+func (gpu *Device) GetUtilizationRates() (gpuUtilization uint, memoryUtilization uint, err error) {
 	var result C.nvmlReturn_t
 	var ctemp C.nvmlUtilization_t
 
