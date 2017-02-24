@@ -195,7 +195,9 @@ func (gpu *Device) BoardId() (uint, error) {
 	return gpu.intProperty("BoardId")
 }
 
-func (gpu *Device) GetDecoderUtilization() (uint, uint, error) {
+// GetDecoderUtilization retrieves the current utilization and sampling size in
+// microseconds for the Decoder
+func (gpu *Device) GetDecoderUtilization() (utilization uint, samplingPeriosUs uint, err error) {
 	var result C.nvmlReturn_t
 	var ctemp C.uint
 	var ctemp2 C.uint
@@ -208,7 +210,9 @@ func (gpu *Device) GetDecoderUtilization() (uint, uint, error) {
 	return uint(ctemp), uint(ctemp2), nil
 }
 
-func (gpu *Device) GetEncoderUtilization() (uint, uint, error) {
+// GetEncoderUtilization retrieves the current utilization and sampling size in microseconds
+// for the Encoder
+func (gpu *Device) GetEncoderUtilization() (utilization uint, samplingPeriosUs uint, err error) {
 	var result C.nvmlReturn_t
 	var ctemp C.uint
 	var ctemp2 C.uint
@@ -221,7 +225,8 @@ func (gpu *Device) GetEncoderUtilization() (uint, uint, error) {
 	return uint(ctemp), uint(ctemp2), nil
 }
 
-func (gpu *Device) GetUtilizationRates() (uint, uint, error) {
+// GetUtilizationRates retrieves the current utilization rates for the device's major subsystems.
+func (gpu *Device) GetUtilizationRates() (gpu uint, memory uint, error) {
 	var result C.nvmlReturn_t
 	var ctemp C.nvmlUtilization_t
 
