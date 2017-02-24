@@ -1,8 +1,8 @@
 package nvml
 
 /*
-// #cgo CPPFLAGS: -I/path/to/install
-#cgo LDFLAGS: -L/usr/src/gdk/nvml/lib/ -l nvidia-ml
+#cgo CPPFLAGS: -I/usr/local/cuda-8.0/targets/x86_64-linux/include
+#cgo LDFLAGS: -L/usr/local/cuda-8.0/targets/x86_64-linux/lib/ -l nvidia-ml -L/usr/lib/nvidia-367/
 
 #include "nvmlbridge.h"
 */
@@ -191,6 +191,31 @@ func (gpu *Device) EnforcedPowerLimit() (uint, error) {
 // the same PLX
 func (gpu *Device) BoardId() (uint, error) {
 	return gpu.intProperty("BoardId")
+}
+
+func (gpu *Device) GetDecoderUtilization() (uint, uint, error) {
+	var result C.nvmlReturn_t
+	var ctemp C.uint
+	var ctemp2 C.uint
+
+	result = C.nvmlDeviceGetDecoderUtilization(gpu.nvmldevice, &ctemp, &ctemp2)
+	if result != C.NVML_SUCCESS {
+		return 0, 0, errors.New("GetDecoderUtilization returned error")
+	}
+
+	return uint(ctemp), uint(ctemp2), nil
+}
+func (gpu *Device) GetEncoderUtilization() (uint, uint, error) {
+	var result C.nvmlReturn_t
+	var ctemp C.uint
+	var ctemp2 C.uint
+
+	result = C.nvmlDeviceGetEncoderUtilization(gpu.nvmldevice, &ctemp, &ctemp2)
+	if result != C.NVML_SUCCESS {
+		return 0, 0, errors.New("GetEncoderUtilization returned error")
+	}
+
+	return uint(ctemp), uint(ctemp2), nil
 }
 
 // MultiGpuBoard
