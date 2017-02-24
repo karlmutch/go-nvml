@@ -3,8 +3,8 @@ package nvml
 // See https://docs.nvidia.com/deploy/nvml-api/group__nvmlDeviceQueries.html
 
 /*
-#cgo CPPFLAGS: -I/usr/local/cuda-8.0/targets/x86_64-linux/include
-#cgo LDFLAGS: -L/usr/local/cuda-8.0/targets/x86_64-linux/lib/ -l nvidia-ml -L/usr/lib/nvidia-375
+#cgo CPPFLAGS: -I/usr/include/nvidia-367/ -I/usr/include/nvidia-375/
+#cgo LDFLAGS: -l nvidia-ml -L/usr/lib/nvidia-367/ -L/usr/lib/nvidia-375/
 
 #include "nvmlbridge.h"
 */
