@@ -1,5 +1,7 @@
 package nvml
 
+// See https://docs.nvidia.com/deploy/nvml-api/group__nvmlDeviceQueries.html
+
 /*
 #cgo CPPFLAGS: -I/usr/local/cuda-8.0/targets/x86_64-linux/include
 #cgo LDFLAGS: -L/usr/local/cuda-8.0/targets/x86_64-linux/lib/ -l nvidia-ml -L/usr/lib/nvidia-375
@@ -205,6 +207,7 @@ func (gpu *Device) GetDecoderUtilization() (uint, uint, error) {
 
 	return uint(ctemp), uint(ctemp2), nil
 }
+
 func (gpu *Device) GetEncoderUtilization() (uint, uint, error) {
 	var result C.nvmlReturn_t
 	var ctemp C.uint
@@ -216,6 +219,18 @@ func (gpu *Device) GetEncoderUtilization() (uint, uint, error) {
 	}
 
 	return uint(ctemp), uint(ctemp2), nil
+}
+
+func (gpu *Device) GetUtilizationRates() (uint, uint, error) {
+	var result C.nvmlReturn_t
+	var ctemp C.nvmlUtilization_t
+
+	result = C.nvmlDeviceGetUtilizationRates(gpu.nvmldevice, &ctemp)
+	if result != C.NVML_SUCCESS {
+		return 0, 0, errors.New("GetUtilizationRates returned error")
+	}
+
+	return uint(ctemp.gpu), uint(ctemp.memory), nil
 }
 
 // MultiGpuBoard
