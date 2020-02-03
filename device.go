@@ -402,10 +402,9 @@ func (gpu *Device) EccErrors() (err error) {
 
 // EccVolatileErrors will return an error if there have been memory errors on the hardware
 func (gpu *Device) EccVolatileErrors() (err error) {
-	var result C.nvmlReturn_t
-	var cCount C.ulonglong = 0
+	cCount := C.ulonglong(0)
 
-	result = C.nvmlDeviceGetTotalEccErrors(gpu.nvmldevice, C.NVML_MEMORY_ERROR_TYPE_UNCORRECTED, C.NVML_VOLATILE_ECC, &cCount)
+	result := C.nvmlDeviceGetTotalEccErrors(gpu.nvmldevice, C.NVML_MEMORY_ERROR_TYPE_UNCORRECTED, C.NVML_VOLATILE_ECC, &cCount)
 	if result != C.NVML_SUCCESS {
 		switch result {
 		case C.NVML_ERROR_NOT_SUPPORTED:
@@ -423,8 +422,7 @@ func (gpu *Device) EccVolatileErrors() (err error) {
 
 // EccVolatileErrors will return an error if there have been memory errors on the hardware
 func (gpu *Device) EccCounts() (volatile uint64, lifetime uint64, err error) {
-	var result C.nvmlReturn_t
-	var cCount C.ulonglong = 0
+	cCount := C.ulonglong(0)
 
 	result := C.nvmlDeviceGetTotalEccErrors(gpu.nvmldevice, C.NVML_MEMORY_ERROR_TYPE_UNCORRECTED, C.NVML_AGGREGATE_ECC, &cCount)
 	if result != C.NVML_SUCCESS {
@@ -435,7 +433,7 @@ func (gpu *Device) EccCounts() (volatile uint64, lifetime uint64, err error) {
 			return 0, 0, fmt.Errorf("nvmlDeviceGetMemoryErrorCounter returned error (%d)", result)
 		}
 	}
-	lifetime = cCount
+	lifetime = uint64(cCount)
 
 	result = C.nvmlDeviceGetTotalEccErrors(gpu.nvmldevice, C.NVML_MEMORY_ERROR_TYPE_UNCORRECTED, C.NVML_VOLATILE_ECC, &cCount)
 	if result != C.NVML_SUCCESS {
@@ -449,7 +447,7 @@ func (gpu *Device) EccCounts() (volatile uint64, lifetime uint64, err error) {
 	if cCount != 0 {
 		return 0, 0, fmt.Errorf("nvmlDeviceGetMemoryErrorCounter detected volatile errors (%d)", cCount)
 	}
-	volatile = cCount
+	volatile = uint64(cCount)
 
 	return volatile, lifetime, nil
 }
